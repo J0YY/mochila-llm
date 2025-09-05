@@ -50,4 +50,8 @@ test:
 	 -d '{"model":"'"$$MODEL_ID"'","messages":[{"role":"user","content":"Say hi."}],"stream":false}' ); \
 	echo $$RESP | grep -q "choices" && echo "OK: chat response" || (echo $$RESP; exit 1)
 
+.PHONY: chat-cli
+chat-cli:
+	cd cli && node chat.mjs --model $${MODEL_ID:-llama3:8b}
+
 

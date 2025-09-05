@@ -1,6 +1,6 @@
 ## Local LLMs: Offline ChatGPT-Style Assistant
 
-## What to run for offline use really quickly
+## What to run UI for offline use really quickly
 ### Terminal 1 (Ollama):
 OLLAMA_HOST=127.0.0.1 OLLAMA_ORIGINS='' ollama serve > /tmp/ollama_serve.log 2>&1 &
 ### Terminal 2 (UI):
@@ -15,6 +15,17 @@ lsof -ti:3000 | xargs kill -9 || true
 ### Or just run the UI on another port: 
 PORT=3001 pnpm start
 
+
+## How to use CLI version
+Default (Ollama llama3:8b):
+make chat-cli
+Pick a model/backend:
+OPENAI_BASE_URL=http://127.0.0.1:8000/v1 node cli/chat.mjs --model TinyLlama/TinyLlama-1.1B-Chat-v1.0
+node cli/chat.mjs --model llama3.2:3b-instruct
+In the CLI:
+Type messages and press Enter
+new to start a fresh thread
+exit to quit
 
 Local, offline assistant with OpenAI-compatible API at `http://127.0.0.1:8000/v1`, a fast Next.js UI, SQLite persistence, and optional RAG/finetuning.
 
@@ -50,6 +61,7 @@ make build   # docker build images
 make stop    # stop services
 make clean   # remove volumes, caches
 make test    # basic API health + chat roundtrip
+make chat-cli # run terminal chat against local backend
 ```
 
 ### Fully offline quickstart
@@ -82,6 +94,29 @@ Do this once online to cache models and build the UI. Afterward, you can disable
 Notes
 - The UI auto-routes to Ollama if the model name looks like `name:tag`, and to vLLM if it looks like `org/model`.
 - SQLite lives at `ui/prisma/dev.db`. Export/import chats from the top bar.
+
+### CLI chat (terminal)
+
+We include a simple CLI that talks to your local OpenAI-compatible endpoint and maintains a conversation in memory.
+
+Run with defaults (Ollama llama3:8b):
+```
+make chat-cli
+```
+
+Specify model/backend via env/flags:
+```
+# vLLM on GPU
+OPENAI_BASE_URL=http://127.0.0.1:8000/v1 node cli/chat.mjs --model TinyLlama/TinyLlama-1.1B-Chat-v1.0
+
+# Ollama alternate
+node cli/chat.mjs --model llama3.2:3b-instruct
+```
+
+Commands inside the CLI:
+- Type your prompt and press Enter
+- `new` to start a fresh thread
+- `exit` to quit
 
 ### Notes
 - Offline-first: After initial weights download, `HF_HUB_OFFLINE=1` prevents egress.
