@@ -1,0 +1,35 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Thread {
+  id        String    @id @default(cuid())
+  title     String
+  createdAt DateTime  @default(now())
+  messages  Message[]
+}
+
+model Message {
+  id         String   @id @default(cuid())
+  threadId   String
+  role       String
+  content    String
+  createdAt  DateTime @default(now())
+  tokensIn   Int? 
+  tokensOut  Int?
+  latencyMs  Int?
+
+  thread     Thread   @relation(fields: [threadId], references: [id], onDelete: Cascade)
+}
+
+model Setting {
+  key   String @id
+  value String
+}
+
+

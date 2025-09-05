@@ -1,0 +1,47 @@
+version: "3.9"
+name: local-gpt-oss
+
+services:
+  vllm:
+    build:
+      context: ./infra
+      dockerfile: vllm.Dockerfile
+      args:
+        MODEL_ID: ${MODEL_ID}
+    environment:
+      - MODEL_ID=${MODEL_ID}
+      - HF_HOME=/models
+      - HF_HUB_ENABLE_HF_TRANSFER=1
+      - HF_HUB_OFFLINE=0
+      - VLLM_WORKER_USE_RAY=false
+    ports:
+      - "8000:8000"
+    volumes:
+      - models:/models
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
+    command: ["bash","-lc","vllm serve ${MODEL_ID} --host 0.0.0.0 --port 8000 --download-dir /models --worker-use-ray=false"]
+
+  ui:
+    build:
+      context: ./ui
+    environment:
+      - OPENAI_BASE_URL=${OPENAI_BASE_URL}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - NEXT_PUBLIC_APP_NAME=${NEXT_PUBLIC_APP_NAME}
+      - NEXT_PUBLIC_DEFAULT_MODEL=${MODEL_ID}
+      - NEXT_PUBLIC_DEFAULT_SYSTEM_PROMPT=${NEXT_PUBLIC_DEFAULT_SYSTEM_PROMPT}
+      - CONTEXT_LENGTH=${CONTEXT_LENGTH}
+    ports:
+      - "3000:3000"
+    depends_on:
+      - vllm
+
+volumes:
+  models:
+    name: local-gpt-oss_models
+
+

@@ -1,0 +1,34 @@
+# OS
+.DS_Store
+
+# Env
+.env
+ui/.env.local
+
+# Node/Next
+node_modules/
+ui/node_modules/
+ui/.next/
+ui/.turbo/
+ui/.vercel/
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Models & caches
+models/
+/models/
+rag_store/
+
+# Build outputs / logs
+ui/dist/
+dist/
+coverage/
+*.log
+/tmp/
+
+# Prisma sqlite db can be committed if desired; keep default
+# Uncomment to ignore local db
+# ui/prisma/dev.db

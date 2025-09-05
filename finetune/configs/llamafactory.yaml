@@ -1,0 +1,24 @@
+model_name_or_path: ${MODEL_ID}
+stage: sft
+do_train: true
+dataset: data/train.jsonl
+cutoff_len: 4096
+learning_rate: 1.5e-4
+num_train_epochs: 3
+per_device_train_batch_size: 2
+gradient_accumulation_steps: 32
+logging_steps: 5
+save_steps: 200
+save_total_limit: 2
+eval_steps: 200
+lora: true
+lora_rank: 32
+lora_alpha: 32
+lora_dropout: 0.05
+bf16: true
+optim: adamw_torch
+max_grad_norm: 1.0
+report_to: none
+output_dir: outputs/lora
+
+
