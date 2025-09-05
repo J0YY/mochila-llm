@@ -1,6 +1,6 @@
 ## Local LLMs: Offline ChatGPT-Style Assistant
 
-# What to run for offline use really quickly
+## What to run for offline use really quickly
 ### Terminal 1 (Ollama):
 OLLAMA_HOST=127.0.0.1 OLLAMA_ORIGINS='' ollama serve > /tmp/ollama_serve.log 2>&1 &
 ### Terminal 2 (UI):
